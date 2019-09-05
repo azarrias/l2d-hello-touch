@@ -1,0 +1,32 @@
+dist: trusty
+language: generic
+install: true
+
+addons:
+  apt:
+    packages:
+    - lua5.1
+jdk: openjdk8
+
+script: "[[ -n $TRAVIS_TAG ]] && ./build.sh web android || ./build.sh" # web and android only for tags    
+deploy:
+  provider: releases
+  skip_cleanup: true
+  api_key:
+    # travis encrypt <token> 
+    secure: CnM019uWpTj0wFYo29JTdM8emrA827PztsgcrZ2WR7eII/d7HeN4s2mXMxYbLH7m8LbLQCoggBIEhiQ6IBGjkkfS1DqWg1A3SdUiydEvcsrVnDH20zfeTUCQisdv3ONpnwkAsNuTFgYHRPJMdikqY8+Sqk1dfSAnr0w1TDWICo5XQp8Vk676/RtZkORMKa8qVHYHxzspux2DZCiajCIiaATZ0AcxgVZVW9D0GqJf29gdCfNLd3pj+K7oRyZMkQQDiSd4o5CJTM6iHC4qCjdi8RuV3Xs/LFK2SsY4sDtSbLJU2m4Ko1a/e/KBzojGnEJh4elsxlU3a/gEWubEQpLrvFm7d67ELRl42ElUI5qyUjn3HldZ3DzHaqoGc6iacf/7WVXtYuUARu+w/0/n04jVK9gjDxrfp8duETcfUp5zbdmoCpfkpFL7MfqBAG7DFoypAEOmBbBQjHuvK2GJW0l/gQYHMI+zV1khoy/ij3JVIJlVYS43z7FDP5NpprA+yLZ2NUc8ioj1ShBq7ACHeMN49br3rS6rmEishDE4IvNVJYD5eQK8eKEWNC9AAZLj5GosQOnNc16KEzuaQyhF6vltULRUmNKUDbMq3uQLOwHx67KjMhnez/Zb4dgwi/XKRgb9gxL/NQvA1mfhsA3ezJO7hfK+4nR5VXOWDiGTuw/UYXU=
+  file:
+  - target/hello_touch.love
+  - target/hello_touch-win.zip
+  - target/hello_touch-web.zip
+  - target/hello_touch-debug.apk
+  - target/hello_touch-release-unsigned.apk
+  on:
+    tags: true
+    all_branches: true
+after_success:
+- "[[ -n $TRAVIS_TAG ]] && ./build.sh deploy $TRAVIS_REPO_SLUG"
+env:
+  global:
+   # travis encrypt GH_TOKEN=<token>
+  - secure: sKzdrb9GDPOFu5sGF6BJFcn0fjTYxNnP1omRugoZaHBW1QsRIKwNT57wcrc9/LWR+b7z+lIlthZbK6blKKGMFF3SwCY14opWH3LoRNqwJDf03/ZheZBx7Pi1HaXjPIZEjRrVHJRX9UqLkothY+RuwTopSAkoT5Nhjd1miN+ujw7ihGgPh+PvO4qHf6opAsJzfHihpuIR3C1niIWI1zcOXY3wyCMziHmdtGGUVTtRp9XYFeTtry2n4XQZrt9bGLZbUcqynIKOV/Dx9UOzdHfs8ZI6vpR6XJdlzG2j2Skbrh9pux5iWfaNYyDKOmSCOEv1WjcmZCCwftRiVfp/5VoQgB/T0l6NS7yBGqKAAL1kYQOma3RlbZRjPVK3P/jEMeu4nTQSLQU7KjtQ8DUdV7IWI9OzzXFPRe0FCyJtm2ddJq1leX9p3GQxvwUsv8yaBFgj9I01gLwaXqCrIRplS/W1s3wY4oYW/hZvBKKzNNwq245j3XiA1+H4zpstcLncZIs9e+mIiWmyZWLjR+80ZhBv1edYW1n+dexpdtr5nJmk6tZFQ54KPY4dFxUJF9wfAyLmJbVy2PVjhqdP83Jq68xU6p5gKo4Buv3dmygdaw0qCLk5MAUttC2KGYmQPpRatioCY3cUrX+svoPXhgFD+E9FXuOdchJmCWcjjjww/4DEoBc=
